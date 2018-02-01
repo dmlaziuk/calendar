@@ -1,0 +1,21 @@
+{
+  "name": "calendar",
+  "private": true,
+  "dependencies": {
+    "@rails/webpacker": "^3.2.1",
+    "axios": "^0.17.1",
+    "moment-timezone": "^0.5.14",
+    "vue": "^2.5.13",
+    "vue-loader": "^14.0.3",
+    "vue-template-compiler": "^2.5.13",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "webpack-dev-server": "^2.11.1"
+  }
+}
