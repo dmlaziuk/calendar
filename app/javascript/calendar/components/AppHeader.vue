@@ -2,7 +2,7 @@
   <div id="header">
     <div>
       <img src="../../assets/logo.png">
-      <h1>Vue.js Calendar</h1>
+      <h1>Vue.js on Rails Calendar</h1>
     </div>
     <div>
       <current-month/>

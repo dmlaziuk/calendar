@@ -56,9 +56,6 @@ export default {
       return weeks
     }
   },
-  components: { CalendarDay },
-  created () {
-    console.log(this.$store)
-  }
+  components: { CalendarDay }
 }
 </script>

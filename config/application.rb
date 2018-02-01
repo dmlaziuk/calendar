@@ -8,6 +8,8 @@ Bundler.require(*Rails.groups)
 
 module Calendar
   class Application < Rails::Application
+    # added for API
+    config.api_only = true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
