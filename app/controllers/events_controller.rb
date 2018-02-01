@@ -11,7 +11,7 @@ class EventsController < ActionController::API
   # POST /events
   def create
     p params
-    @event = Event.new(event_params)
+    @event = Event.create!(event_params)
     json_response(@event, :created)
   end
 
@@ -36,7 +36,7 @@ class EventsController < ActionController::API
 
   def event_params
     # whitelist params
-    params.require(:description)
+    params.require(:event).permit(:event_date, :description)
   end
 
   def set_event
