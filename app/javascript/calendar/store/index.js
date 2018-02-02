@@ -41,13 +41,15 @@ export default new Vuex.Store({
   actions: {
     addEvent (context, payload) {
       return new Promise((resolve, reject) => {
-        let obj = {
-          description: payload,
-          date: context.state.eventFormDate
+        let event = {
+          event: {
+            description: payload,
+            event_date: context.state.eventFormDate
+          }
         }
-        Axios.post('/add_event', obj).then(response => {
-          if (response.status === 200) {
-            context.commit('addEvent', obj)
+        Axios.post('/events', event).then(response => {
+          if (response.status === 201) {
+            context.commit('addEvent', event.event)
             resolve()
           } else {
             reject(Error('Cannot post to server'))

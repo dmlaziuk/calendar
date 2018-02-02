@@ -10,7 +10,6 @@ class EventsController < ActionController::API
 
   # POST /events
   def create
-    p params
     @event = Event.create!(event_params)
     json_response(@event, :created)
   end
