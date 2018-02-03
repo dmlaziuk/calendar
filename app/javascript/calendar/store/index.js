@@ -9,8 +9,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentYear: 2018,
-    currentMonth: 1,
+    currentYear: moment().get('year'),
+    currentMonth: moment().get('month') + 1,
     eventFormPosX: 0,
     eventFormPosY: 0,
     eventFormActive: false,
@@ -31,6 +31,9 @@ export default new Vuex.Store({
     eventFormActive (state, payload) {
       state.eventFormActive = payload
     },
+    initEvents (state, payload) {
+      state.events = payload
+    },
     addEvent (state, payload) {
       state.events.push(payload)
     },
@@ -39,6 +42,21 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    initEvents (context) {
+      return new Promise((resolve, reject) => {
+        Axios.get('/events').then((response) => {
+          if (response.status === 200) {
+            let newEvents = response.data.map((item) => {
+              return { description: item.description, event_date: moment(item.event_date) }
+            })
+            context.commit('initEvents', newEvents)
+            resolve()
+          } else {
+            reject(Error('Cannot get events from server'))
+          }
+        })
+      })
+    },
     addEvent (context, payload) {
       return new Promise((resolve, reject) => {
         let event = {
