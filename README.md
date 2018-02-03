@@ -148,6 +148,8 @@ App
 
 #### 6.1. App component
 
+![App](doc/App.png)
+
 Template:
 
 ```html
@@ -177,23 +179,13 @@ export default {
 }
 ```
 
-In `App` component we include `Vuex.Store` implemented in separate file `calendar/store/index.js`.
+We include `Vuex.Store` implemented in separate file `calendar/store/index.js`.
 
-And in `beforeCreate` hook we dispatch `initEvents` action to `Vuex.Store`.
-
-Vue.js Component Lifecycle:
-
-![Lifecycle](https://vuejs.org/images/lifecycle.png)
-
-Vue.js data/computed/methods comparison:
-
-  Type  | readable?|writeable?|arguments?|computed?|cached?|
-:------:|:--------:|:--------:|:--------:|:-------:|:-----:|
-  data  |    +     |    +     |    -     |    -    |   -   |
-computed|    +     |    +     |    -     |    +    |   +   |
- methods|    +     |    -     |    +     |    +    |   -   |
+In `beforeCreate` hook we dispatch `initEvents` action to initialize `store` from Back-end database.
 
 #### 6.2. AppHeader component
+
+![AppHeader](doc/AppHeader.png)
 
 Template:
 
@@ -210,6 +202,8 @@ Template:
 ```
 
 #### 6.3. CurrentMonth component
+
+![CurrentMonth](doc/CurrentMonth.png)
 
 Template:
 
@@ -239,6 +233,8 @@ export default {
 
 #### 6.4. DayBar component
 
+![DayBar](doc/DayBar.png)
+
 Template:
 
 ```html
@@ -254,6 +250,8 @@ Template:
 ```
 
 #### 6.5. Calendar component
+
+![Calendar](doc/Calendar.png)
 
 Template:
 
@@ -281,6 +279,8 @@ export default {
 ```
 
 #### 6.6. CalendarDay component
+
+![CalendarDay](doc/CalendarDay.png)
 
 Template:
 
@@ -312,6 +312,8 @@ export default {
 ```
 
 #### 6.7. EventForm component
+
+![EventForm](doc/EventForm.png)
 
 Template:
 
@@ -367,7 +369,7 @@ export default {
 
 ![Vuex](https://vuex.vuejs.org/en/images/vuex.png)
 
-Vuex **Core concepts**:
+Vuex **core concepts**:
 
 - state:
  - stores all data
@@ -399,7 +401,7 @@ export default new Vuex.Store({
   mutations: {
     setCurrentMonth (state, payload) { state.currentMonth = payload },
     setCurrentYear (state, payload) { state.currentYear = payload },
-    eventFormPos (state, payload) { /* ... */ },
+    eventFormPos (state, payload) { /* set eventFormPosX and eventFormPosY */ },
     eventFormActive (state, payload) { state.eventFormActive = payload },
     initEvents (state, payload) { state.events = payload },
     addEvent (state, payload) { state.events.push(payload) },
@@ -547,3 +549,17 @@ class EventsController < ActionController::API
   end
 end
 ```
+
+### 8. Appendix
+
+#### A1. Vue.js Component Lifecycle:
+
+![Lifecycle](https://vuejs.org/images/lifecycle.png)
+
+#### A2. Vue.js data/computed/methods comparison
+
+  Type  | readable?|writeable?|arguments?|computed?|cached?|
+:------:|:--------:|:--------:|:--------:|:-------:|:-----:|
+  data  |    +     |    +     |    -     |    -    |   -   |
+computed|    +     |    +     |    -     |    +    |   +   |
+ methods|    +     |    -     |    +     |    +    |   -   |
