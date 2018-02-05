@@ -2,13 +2,14 @@
   <div id="calendar-day" :class="classObject" @click="captureClick">
       {{ day.format('D') }}
       <ul class="event-list">
-        <li v-for="event in events">{{ event.description }}</li>
+        <event v-for="event in events" :key="event.id" :event="event"></event>
       </ul>
   </div>
 </template>
 
 <script>
 import moment from 'moment-timezone'
+import Event from './Event.vue'
 export default {
   computed: {
     classObject () {
@@ -33,6 +34,7 @@ export default {
       this.$store.commit('eventFormActive', true)
       this.$store.commit('eventFormDate', this.day)
     }
-  }
+  },
+  components: { Event }
 }
 </script>

@@ -148,6 +148,23 @@ body {
 
             li {
               white-space: nowrap;
+              #close-button {
+                margin: 0;
+                padding: 0;
+                // font-size: 1.25rem;
+                background-color: white;
+                // position: absolute;
+                border: none;
+                // width: 20px;
+                font-weight: bold;
+                color: rgb(150, 0, 0);
+                // right: 0.6rem;
+                // top: 0.6rem;
+                cursor: pointer;
+                &:focus  {
+                  outline: none;
+                }
+              }
             }
           }
         }

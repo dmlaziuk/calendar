@@ -1,22 +1,18 @@
 class EventsController < ActionController::API
-  include Response
   before_action :set_event, only: [:show, :update, :destroy]
 
   # GET /events
   def index
     @events = Event.all
-    json_response(@events)
   end
 
   # POST /events
   def create
     @event = Event.create!(event_params)
-    json_response(@event, :created)
   end
 
   # GET /events/:id
   def show
-    json_response(@event)
   end
 
   # PUT /events/:id

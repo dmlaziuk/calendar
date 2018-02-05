@@ -37,6 +37,10 @@ export default new Vuex.Store({
     addEvent (state, payload) {
       state.events.push(payload)
     },
+    deleteEvent (state, payload) {
+      let index = state.events.findIndex(i => i.id === payload)
+      state.events.splice(index, 1)
+    },
     eventFormDate (state, payload) {
       state.eventFormDate = payload
     }
@@ -47,7 +51,11 @@ export default new Vuex.Store({
         Axios.get('/events').then((response) => {
           if (response.status === 200) {
             let newEvents = response.data.map((item) => {
-              return { description: item.description, event_date: moment(item.event_date) }
+              return {
+                id: item.id,
+                description: item.description,
+                event_date: moment(item.event_date)
+              }
             })
             context.commit('initEvents', newEvents)
             resolve()
@@ -66,11 +74,29 @@ export default new Vuex.Store({
           }
         }
         Axios.post('/events', event).then(response => {
-          if (response.status === 201) {
-            context.commit('addEvent', event.event)
+          if (response.status === 200) {
+            event = {
+              id: response.data.id,
+              description: payload,
+              event_date: context.state.eventFormDate
+            }
+            context.commit('addEvent', event)
             resolve()
           } else {
-            reject(Error('Cannot post to server'))
+            reject(Error('Cannot post event to server'))
+          }
+        })
+      })
+    },
+    deleteEvent (context, payload) {
+      console.log()
+      return new Promise((resolve, reject) => {
+        Axios.delete('/events/' + payload).then(response => {
+          if (response.status === 204) {
+            context.commit('deleteEvent', payload)
+            resolve()
+          } else {
+            reject(Error(`Cannot delete event id=${payload} on server`))
           }
         })
       })
