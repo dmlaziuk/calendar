@@ -3,7 +3,7 @@
     <h4>Add an event</h4>
     <p>{{ date.format('dddd, MMM Do') }}</p>
     <div class="text">
-      <input v-focus class="text" v-model="description" placeholder="Vacation" @keyup.enter="create">
+      <input v-focus class="text" v-model="description" placeholder="New event" @keyup.enter="create">
       <div class="buttons">
         <button @click="create">Create</button>
       </div>

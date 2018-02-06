@@ -1,7 +1,6 @@
 import Vue from 'vue/dist/vue.esm'
 import Vuex from 'vuex'
 import moment from 'moment-timezone'
-import Axios from 'axios'
 
 moment.tz.setDefault('UTC')
 
@@ -48,21 +47,19 @@ export default new Vuex.Store({
   actions: {
     initEvents (context) {
       return new Promise((resolve, reject) => {
-        Axios.get('/events').then((response) => {
-          if (response.status === 200) {
-            let newEvents = response.data.map((item) => {
+        fetch('/events').then(response => { return response.json() })
+          .then(json => {
+            let newEvents = json.map(event => {
               return {
-                id: item.id,
-                description: item.description,
-                event_date: moment(item.event_date)
+                id: event.id,
+                description: event.description,
+                event_date: moment(event.event_date)
               }
             })
             context.commit('initEvents', newEvents)
-            resolve()
-          } else {
-            reject(Error('Cannot get events from server'))
-          }
-        })
+          })
+          .catch(() => alert('Cannot get events from server:')
+          )
       })
     },
     addEvent (context, payload) {
@@ -73,32 +70,32 @@ export default new Vuex.Store({
             event_date: context.state.eventFormDate
           }
         }
-        Axios.post('/events', event).then(response => {
-          if (response.status === 200) {
+        fetch('/events', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(event)
+        })
+          .then(response => { return response.json() })
+          .then(json => {
             event = {
-              id: response.data.id,
+              id: json.id,
               description: payload,
               event_date: context.state.eventFormDate
             }
             context.commit('addEvent', event)
             resolve()
-          } else {
-            reject(Error('Cannot post event to server'))
-          }
-        })
+          })
+          .catch(() => alert('Cannot save event on server'))
       })
     },
     deleteEvent (context, payload) {
-      console.log()
       return new Promise((resolve, reject) => {
-        Axios.delete('/events/' + payload).then(response => {
-          if (response.status === 204) {
+        fetch(`/events/${payload}`, {method: 'delete'})
+          .then(response => {
             context.commit('deleteEvent', payload)
             resolve()
-          } else {
-            reject(Error(`Cannot delete event id=${payload} on server`))
-          }
-        })
+          })
+          .catch(() => alert('Cannot delete event on server'))
       })
     }
   }
