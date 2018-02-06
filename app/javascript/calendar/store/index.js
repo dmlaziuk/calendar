@@ -1,6 +1,10 @@
 import Vue from 'vue/dist/vue.esm'
 import Vuex from 'vuex'
 import moment from 'moment-timezone'
+import { normalize, schema } from 'normalizr'
+
+const eventSchema = new schema.Entity('events')
+const eventsArraySchema = new schema.Array(eventSchema)
 
 moment.tz.setDefault('UTC')
 
@@ -14,7 +18,17 @@ export default new Vuex.Store({
     eventFormPosY: 0,
     eventFormActive: false,
     eventFormDate: moment(),
-    events: []
+    db: {
+      entities: {
+        events: {}
+      },
+      result: []
+    }
+  },
+  getters: {
+    events: state => {
+      return state.db.result.map(id => state.db.entities.events[id])
+    }
   },
   mutations: {
     setCurrentMonth (state, payload) {
@@ -30,15 +44,16 @@ export default new Vuex.Store({
     eventFormActive (state, payload) {
       state.eventFormActive = payload
     },
-    initEvents (state, payload) {
-      state.events = payload
+    initDB (state, payload) {
+      state.db = payload
     },
     addEvent (state, payload) {
-      state.events.push(payload)
+      state.db.result.push(payload.id)
+      state.db.entities.events[payload.id] = payload
     },
     deleteEvent (state, payload) {
-      let index = state.events.findIndex(i => i.id === payload)
-      state.events.splice(index, 1)
+      state.db.entities.events[payload] = undefined
+      state.db.result.splice(state.db.result.indexOf(payload), 1)
     },
     eventFormDate (state, payload) {
       state.eventFormDate = payload
@@ -56,7 +71,7 @@ export default new Vuex.Store({
                 event_date: moment(event.event_date)
               }
             })
-            context.commit('initEvents', newEvents)
+            context.commit('initDB', normalize(newEvents, eventsArraySchema))
           })
           .catch(() => alert('Cannot get events from server:')
           )

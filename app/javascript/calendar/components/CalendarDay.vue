@@ -24,7 +24,7 @@ export default {
       }
     },
     events () {
-      return this.$store.state.events.filter(event => event.event_date.isSame(this.day, 'day'))
+      return this.$store.getters.events.filter(event => event.event_date.isSame(this.day, 'day'))
     }
   },
   props: [ 'day' ],

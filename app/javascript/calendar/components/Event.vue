@@ -1,7 +1,7 @@
 <template>
   <li>
-    {{ event.description }}
     <button id="close-button" @click.stop="deleteEvent">&#10005;</button>
+    {{ event.description }}
   </li>
 </template>
 <script>
