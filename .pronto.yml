@@ -1,0 +1,12 @@
+all:
+  exclude:
+    - 'spec/**/*'
+
+github:
+  slug: dmlaziuk/calendar
+  access_token: 0fc962d0c2e393d160a5f26217d4920c335988d4
+  api_endpoint: https://api.github.com/
+  web_endpoint: https://github.com/
+
+max_warnings: 150
+verbose: true

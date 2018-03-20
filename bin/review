@@ -1,0 +1,6 @@
+export PULL_REQUEST_URL=${CIRCLE_PULL_REQUEST}
+export PRONTO_PULL_REQUEST_ID=$(echo $PULL_REQUEST_URL | grep -o -E "[0-9]+$")
+export RUBOCOP_CONFIG=pronto/rubocop/rubocop.yml
+export ESLINT_CONFIG=pronto/eslint/eslintrc.json
+
+(bin/bundle exec pronto run -f github_status github_pr_review -c origin/master) || true

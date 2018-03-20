@@ -1,0 +1,9 @@
+[submodule "pronto/eslint"]
+	path = pronto/eslint
+	url = git@github.com:rubyroidlabs/eslint.git
+[submodule "pronto/rubocop"]
+	path = pronto/rubocop
+	url = git@github.com:rubyroidlabs/rubocop.git
+[submodule "pronto/reek"]
+	path = pronto/reek
+	url = git@github.com:rubyroidlabs/reek.git

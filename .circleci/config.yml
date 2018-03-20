@@ -1,0 +1,113 @@
+version: 2.0
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - checkout_code
+      - bundle_dependencies:
+          requires:
+            - checkout_code
+      - yarn_dependencies:
+          requires:
+            - checkout_code
+      - code_review:
+          requires:
+            - bundle_dependencies
+            - yarn_dependencies
+      - unit_tests:
+          requires:
+            - code_review
+jobs:
+  checkout_code:
+    working_directory: ~/calendar
+    docker:
+      - image: circleci/ruby:2.4
+    steps:
+      - checkout
+      - run: git submodule update --init --recursive --remote
+      - save_cache:
+          key: calendar-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/calendar
+
+  bundle_dependencies:
+    docker:
+      - image: circleci/ruby:2.4
+    working_directory: ~/calendar
+    steps:
+      - restore_cache:
+          key: calendar-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: calendar-bundle-{{ checksum "Gemfile.lock" }}
+      # Missing requirement for pronto gem
+      - run: sudo apt-get install cmake
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: calendar-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  yarn_dependencies:
+    docker:
+      - image: circleci/ruby:2.4-node
+    working_directory: ~/calendar
+    steps:
+      - restore_cache:
+          key: calendar-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: calendar-yarn-{{ checksum "yarn.lock" }}
+      - run: sudo npm i -g yarn
+      - run: yarn global add bower
+      - run: yarn install
+      - save_cache:
+          key: calendar-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+
+  code_review:
+    docker:
+      - image: circleci/ruby:2.4-node
+    working_directory: ~/calendar
+    steps:
+      - restore_cache:
+          key: calendar-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: calendar-bundle-{{ checksum "Gemfile.lock" }}
+      - run: sudo apt-get install cmake
+      - run: bundle install --path vendor/bundle
+      - run: bin/review
+
+  unit_tests:
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: circle_test
+      POSTGRES_PASSWORD: ""
+    docker:
+      - image: circleci/ruby:2.4-node
+        environment:
+          RAILS_ENV: test
+      - image: circleci/postgres:9.6-alpine-ram
+      - image: redis:4.0-alpine
+    working_directory: ~/calendar
+    steps:
+      - restore_cache:
+          key: calendar-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: calendar-bundle-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          key: calendar-yarn-{{ checksum "yarn.lock" }}
+      - run: sudo apt-get install cmake
+      - run: bundle --path vendor/bundle
+      - run: bundle exec rake db:create db:migrate
+      - type: shell
+        command: |
+          bundle exec rspec --profile 10 \
+                            --format RspecJunitFormatter \
+                            --out test-results/rspec.xml \
+                            --format progress \
+                            $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings
+
+
+      - store_test_results:
+          path: test_results
