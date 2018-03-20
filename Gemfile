@@ -44,16 +44,20 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'foreman'
 end
 
 group :development, :test do
-  gem 'foreman'
-  gem 'rspec'
-  gem 'rspec-rails', '~> 3.7'
   gem 'pronto'
   gem 'pronto-brakeman'
   gem 'pronto-eslint'
   gem 'pronto-rails_schema'
   gem 'pronto-reek'
   gem 'pronto-rubocop'
+end
+
+group :test do
+  gem 'rspec', '~> 3.7'
+  gem 'rspec-rails', '~> 3.7'
+  gem 'rspec_junit_formatter'
 end
